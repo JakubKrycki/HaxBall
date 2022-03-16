@@ -1,6 +1,6 @@
-package org.example.game.ball;
+package org.example.game.objects.ball;
 
-import org.example.game.Object;
+import org.example.game.objects.Object;
 
 import java.awt.*;
 
