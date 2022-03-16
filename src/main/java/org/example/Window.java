@@ -13,8 +13,8 @@ public class Window extends JFrame {
     private final int BOX_WH = 75;
 
     public Window(int screen_w, int screen_h){
-        //TODO game
         super("HaxBall by Kopecki Piotr & Krycki Jakub");
+        game = new Game();
         SCREEN_W = screen_w;
         SCREEN_H = screen_h;
         drawMap();
