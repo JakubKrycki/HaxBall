@@ -39,8 +39,9 @@ public class Window extends JFrame {
     @Override
     public void paint(Graphics g){
         Graphics2D g2D = (Graphics2D) g;
-       // g2D.setColor(Color.BLACK); Odkomentowac jak ogarne miganie
-        //g2D.fillRect(0,0,SCREEN_W,SCREEN_H);
+        /*TODO
+        g2D.setColor(Color.BLACK); //Odkomentowac jak ogarne miganie
+        g2D.fillRect(0,0,SCREEN_W,SCREEN_H);*/
         g2D.drawImage(background,0,0,null);
         g2D.setFont(new Font("Verdana", Font.BOLD, 60));
         int stringWidth = g2D.getFontMetrics().stringWidth(game.getScore());

@@ -42,11 +42,20 @@ public abstract class Object {
         }
         return y;
     }
+    public void checkNotHittingSoccerGoal(int x, int y){
+        if(y < 450 && y > 245 && x > 1180){
+            xCoord = 1180;
+        }
+        if(y < 450 && y > 245 && x < 46){
+            xCoord = 46;
+        }
+    }
     public void move(){
         xCoord += xVector;
         xCoord = checkX((int)xCoord);
         yCoord += yVector;
         yCoord = checkY((int)yCoord);
+        checkNotHittingSoccerGoal((int)xCoord,(int)yCoord);
 
     }
 

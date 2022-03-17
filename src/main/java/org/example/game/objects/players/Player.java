@@ -13,6 +13,4 @@ public abstract class Player extends Object {
         super(x, y, 0.1f, color);
     }
 
-
-
 }

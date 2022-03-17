@@ -30,15 +30,23 @@ public class Game implements ActionListener,KeyListener {
         window = win;
     }
     public void startTheGame(){
-        playerRed = new AlivePlayer(SCREEN_W/4 - 215,SCREEN_H/2 - 120, Color.RED);
-        playerBlue = new AlivePlayer(SCREEN_W/2 + 480,SCREEN_H/2 - 120, Color.BLUE);
-        ball = new Ball(SCREEN_W/2 - 30 ,SCREEN_H/2 - 120,Color.WHITE);
+        playerRed = new AlivePlayer((float)SCREEN_W/4 - 215,(float)SCREEN_H/2 - 120, Color.RED);
+        playerBlue = new AlivePlayer((float)SCREEN_W/2 + 480,(float)SCREEN_H/2 - 120, Color.BLUE);
+        ball = new Ball((float)SCREEN_W/2 - 30 ,(float)SCREEN_H/2 - 120,Color.WHITE);
         timer = new Timer(10,this);
         timer.start();
         window.addKeyListener(this);
         window.setFocusable(true);
         window.setFocusTraversalKeysEnabled(false);
 
+    }
+
+    public void changeScore(){
+        String s = Integer.toString(playerBlue.getPoints());
+        score = s;
+        score += " : ";
+        s = Integer.toString(playerRed.getPoints());
+        score += s;
     }
 
     @Override
@@ -49,16 +57,16 @@ public class Game implements ActionListener,KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         int button = e.getKeyCode();
-        if(button == e.VK_DOWN){
+        if(button == KeyEvent.VK_DOWN){
             playerBlue.setYVector(5);
         }
-        if(button == e.VK_UP){
+        if(button == KeyEvent.VK_UP){
             playerBlue.setYVector(-5 );
         }
-        if(button == e.VK_RIGHT){
+        if(button == KeyEvent.VK_RIGHT){
             playerBlue.setXVector(5);
         }
-        if(button == e.VK_LEFT){
+        if(button == KeyEvent.VK_LEFT){
             playerBlue.setXVector(-5);
         }
     }
@@ -66,16 +74,16 @@ public class Game implements ActionListener,KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
         int button = e.getKeyCode();
-        if(button == e.VK_DOWN){
+        if(button == KeyEvent.VK_DOWN){
             playerBlue.setYVector(0);
         }
-        if(button == e.VK_UP){
+        if(button == KeyEvent.VK_UP){
             playerBlue.setYVector(0);
         }
-        if(button == e.VK_RIGHT){
+        if(button == KeyEvent.VK_RIGHT){
             playerBlue.setXVector(0);
         }
-        if(button == e.VK_LEFT){
+        if(button == KeyEvent.VK_LEFT){
             playerBlue.setXVector(0);
         }
     }
@@ -83,6 +91,7 @@ public class Game implements ActionListener,KeyListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         playerBlue.move();
+        changeScore();
         window.repaint();
     }
 }
