@@ -1,6 +1,7 @@
 package org.example.game.objects;
 
 import lombok.Data;
+import org.example.game.objects.players.Player;
 
 import java.awt.*;
 
@@ -26,18 +27,14 @@ public abstract class Object {
         this.color = color;
     }
 
-    public void move(){
-        xCoord += xVector;
-        yCoord += yVector;
-    }
-
-    public boolean checkHit(Object object){
-        return distance(object) <= r+object.getR();
-    }
+    public abstract void move(Player player1, Player player2, Rectangle boundaries, Rectangle goalBoundaries);
 
     public double distance(Object object){
         return Math.sqrt(Math.pow(xCoord- object.xCoord, 2)+Math.pow(yCoord- object.yCoord, 2));
     }
 
+    public float getSignOfNumber(float number){
+        return (number != 0)? number/Math.abs(number) : 0;
+    }
 
 }

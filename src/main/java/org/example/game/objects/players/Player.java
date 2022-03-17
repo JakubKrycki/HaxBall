@@ -12,7 +12,4 @@ public abstract class Player extends Object {
     public Player(float x, float y, Color color){
         super(x, y, 0.1f, color);
     }
-
-
-
 }
