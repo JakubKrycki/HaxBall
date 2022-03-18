@@ -1,7 +1,7 @@
 package org.example.game;
 
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import org.example.Window;
 import org.example.game.objects.ball.Ball;
 import org.example.game.objects.players.AlivePlayer;
 import org.example.game.objects.players.Player;
@@ -11,34 +11,76 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import javax.swing.Timer;
+import javax.swing.*;
+
+import static org.example.Main.*;
 
 @Data
-@RequiredArgsConstructor
-public class Game implements ActionListener,KeyListener {
+public class Game extends JPanel implements ActionListener,KeyListener {
     private Player playerRed;
     private Player playerBlue;
     private Ball ball;
     private String score = "0 : 0";
-    private int SCREEN_W;
-    private int SCREEN_H;
-    private Window window;
     private Timer timer;
-    public Game(int w, int h, Window win){
-        SCREEN_W = w;
-        SCREEN_H = h;
-        window = win;
-    }
-    public void startTheGame(){
+    private final int BOX_WH = 75;
+    private Image backgroundImage;
+
+    public Game(){
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        String path = "assets/pitch_resized.png";
+        backgroundImage = toolkit.getImage(path);
         playerRed = new AlivePlayer((float)SCREEN_W/4 - 215,(float)SCREEN_H/2 - 120, Color.RED);
         playerBlue = new AlivePlayer((float)SCREEN_W/2 + 480,(float)SCREEN_H/2 - 120, Color.BLUE);
         ball = new Ball((float)SCREEN_W/2 - 30 ,(float)SCREEN_H/2 - 120,Color.WHITE);
-        timer = new Timer(10,this);
+        addKeyListener(this);
+        setFocusable(true);
+        requestFocus();
+        setFocusTraversalKeysEnabled(false);
+        timer = new Timer(0, this);
         timer.start();
-        window.addKeyListener(this);
-        window.setFocusable(true);
-        window.setFocusTraversalKeysEnabled(false);
+    }
 
+    @Override
+    public void paint(Graphics g){
+        Graphics2D g2D = (Graphics2D) g;
+        g2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        g.setColor(Color.BLACK); //Odkomentowac jak ogarne miganie
+        g.fillRect(0,0,SCREEN_W,SCREEN_H);//*/
+        g.drawImage(backgroundImage,0,0,null);
+
+        printScore(g);
+        printObjects(g);
+    }
+
+    void printScore(Graphics g){
+        g.setFont(new Font("Verdana", Font.BOLD, 60));
+        int stringWidth = g.getFontMetrics().stringWidth(getScore());
+        g.setColor(Color.white);
+        g.drawString(getScore(),SCREEN_W/2 - stringWidth/2,(int)(720 + (SCREEN_H - 720)/4 + BOX_WH*0.75));
+        g.setColor(Color.RED);
+        g.fillRect(SCREEN_W/2 - BOX_WH - stringWidth/2 - 10,720 + (SCREEN_H - 720)/4,75,75);
+        g.setColor(Color.BLUE);
+        g.fillRect(SCREEN_W/2 + stringWidth/2 + 10,720 + (SCREEN_H - 720)/4,75,75);
+    }
+
+    void printObjects(Graphics g){
+        g.setColor(getPlayerBlue().getColor());
+        int x = (int)(getPlayerBlue().getXCoord());
+        int y = (int)(getPlayerBlue().getYCoord());
+        int r = (int)(getPlayerBlue().getR());
+        g.fillOval(x,y,r*2,r*2);
+
+        g.setColor(getPlayerRed().getColor());
+        x = (int)(getPlayerRed().getXCoord());
+        y = (int)(getPlayerRed().getYCoord());
+        r = (int)(getPlayerRed().getR());
+        g.fillOval(x,y,r*2,r*2);
+
+        g.setColor(getBall().getColor());
+        x = (int)(getBall().getXCoord());
+        y = (int)(getBall().getYCoord());
+        r = (int)(getBall().getR());
+        g.fillOval(x,y,r*2,r*2);
     }
 
     public void changeScore(){
@@ -50,9 +92,7 @@ public class Game implements ActionListener,KeyListener {
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
+    public void keyTyped(KeyEvent e) {}
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -92,6 +132,6 @@ public class Game implements ActionListener,KeyListener {
     public void actionPerformed(ActionEvent e) {
         playerBlue.move();
         changeScore();
-        window.repaint();
+        repaint();
     }
 }
