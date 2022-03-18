@@ -1,21 +1,23 @@
 package org.example.game.objects;
 
 import lombok.Data;
+import org.example.game.objects.players.Player;
 
 import java.awt.*;
 
 @Data
 public abstract class Object {
 
-    private float xCoord;
-    private float yCoord;
-    private float xVector;
-    private float yVector;
+    private float xCoord = 0;
+    private float yCoord = 0;
+    private float xVector = 0;
+    private float yVector = 0;
     private float r = 30;
-    private float deltaT;
-    private Color color;
+    private float deltaT = 0.1f;
+    private Color color = Color.BLACK;
 
     public Object(){}
+
     public Object(float x, float y, float deltaT, Color color) {
         xCoord = x;
         yCoord = y;
@@ -63,9 +65,14 @@ public abstract class Object {
         return distance(object) <= r+object.getR();
     }
 
+    public abstract void move(Player player1, Player player2, Rectangle boundaries, Rectangle goalBoundaries);
+
     public double distance(Object object){
         return Math.sqrt(Math.pow(xCoord- object.xCoord, 2)+Math.pow(yCoord- object.yCoord, 2));
     }
 
+    public float getSignOfNumber(float number){
+        return (number != 0)? number/Math.abs(number) : 0;
+    }
 
 }
