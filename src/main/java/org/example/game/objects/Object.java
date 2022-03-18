@@ -18,6 +18,8 @@ public abstract class Object {
 
     public Object(){}
 
+    public abstract void move(Player player1, Player player2, Rectangle boundaries, Rectangle goalBoundaries);
+
     public Object(float x, float y, float deltaT, Color color) {
         xCoord = x;
         yCoord = y;
@@ -52,20 +54,10 @@ public abstract class Object {
             xCoord = 46;
         }
     }
-    public void move(){
-        xCoord += xVector;
-        xCoord = checkX((int)xCoord);
-        yCoord += yVector;
-        yCoord = checkY((int)yCoord);
-        checkNotHittingSoccerGoal((int)xCoord,(int)yCoord);
-
-    }
 
     public boolean checkHit(Object object){
         return distance(object) <= r+object.getR();
     }
-
-    public abstract void move(Player player1, Player player2, Rectangle boundaries, Rectangle goalBoundaries);
 
     public double distance(Object object){
         return Math.sqrt(Math.pow(xCoord- object.xCoord, 2)+Math.pow(yCoord- object.yCoord, 2));

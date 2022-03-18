@@ -130,7 +130,9 @@ public class Game extends JPanel implements ActionListener,KeyListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        playerBlue.move();
+        Rectangle rectangle = new Rectangle(0,0,0,0);
+        playerBlue.move(playerBlue, playerRed, rectangle, rectangle);
+        ball.move(playerBlue, playerRed, rectangle, rectangle);
         changeScore();
         repaint();
     }
