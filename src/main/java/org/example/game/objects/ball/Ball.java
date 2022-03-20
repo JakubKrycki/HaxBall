@@ -9,6 +9,7 @@ public class Ball extends Object {
 
     public Ball(float x, float y, Color color){
         super(x, y, 0.1f, color);
+        this.setR(20);
     }
 
     public void playerCollision(Player player){
@@ -18,11 +19,11 @@ public class Ball extends Object {
         float ySign = getSignOfNumber(-deltaY);// 1 or -1 or 0
         if(deltaX != 0) {
             float a = (deltaY) / (deltaX);//a = (y2-y1)/(x2-x1)
-            setXVector((float)(xSign*Math.sqrt(25/(Math.pow(a, 2)+1))));
+            setXVector((float)(xSign*Math.sqrt(30/(Math.pow(a, 2)+1))));
             setYVector(ySign*Math.abs(getXVector()*a));
         }else{
             setXVector(0);
-            setYVector(-5*ySign);
+            setYVector(-(float)Math.sqrt(30)*ySign);
         }
     }
 
@@ -62,5 +63,7 @@ public class Ball extends Object {
 
         setXCoord(getXCoord() + getXVector());
         setYCoord(getYCoord() + getYVector());
+        setXVector((float)0.95*getXVector());
+        setYVector((float)0.95*getYVector());
     }
 }

@@ -20,6 +20,8 @@ public class Game extends JPanel implements ActionListener,KeyListener {
     private Player playerRed;
     private Player playerBlue;
     private Ball ball;
+    private Rectangle goalBoundaries;
+    private Rectangle boundaries;
     private String score = "0 : 0";
     private Timer timer;
     private final int BOX_WH = 75;
@@ -32,11 +34,13 @@ public class Game extends JPanel implements ActionListener,KeyListener {
         playerRed = new AlivePlayer((float)SCREEN_W/4 - 215,(float)SCREEN_H/2 - 120, Color.RED);
         playerBlue = new AlivePlayer((float)SCREEN_W/2 + 480,(float)SCREEN_H/2 - 120, Color.BLUE);
         ball = new Ball((float)SCREEN_W/2 - 30 ,(float)SCREEN_H/2 - 120,Color.WHITE);
+        boundaries = new Rectangle(78, 54, 1123, 613);
+        goalBoundaries = new Rectangle(78, 275, 1123, 170);
         addKeyListener(this);
         setFocusable(true);
         requestFocus();
         setFocusTraversalKeysEnabled(false);
-        timer = new Timer(0, this);
+        timer = new Timer(10, this);
         timer.start();
     }
 
@@ -44,12 +48,12 @@ public class Game extends JPanel implements ActionListener,KeyListener {
     public void paint(Graphics g){
         Graphics2D g2D = (Graphics2D) g;
         g2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        g.setColor(Color.BLACK); //Odkomentowac jak ogarne miganie
-        g.fillRect(0,0,SCREEN_W,SCREEN_H);//*/
+        g.setColor(Color.BLACK);
+        g.fillRect(0,0,SCREEN_W,SCREEN_H);
         g.drawImage(backgroundImage,0,0,null);
-
         printScore(g);
         printObjects(g);
+        g.dispose();
     }
 
     void printScore(Graphics g){
@@ -68,19 +72,19 @@ public class Game extends JPanel implements ActionListener,KeyListener {
         int x = (int)(getPlayerBlue().getXCoord());
         int y = (int)(getPlayerBlue().getYCoord());
         int r = (int)(getPlayerBlue().getR());
-        g.fillOval(x,y,r*2,r*2);
+        g.fillOval(x-r,y-r,r*2,r*2);
 
         g.setColor(getPlayerRed().getColor());
         x = (int)(getPlayerRed().getXCoord());
         y = (int)(getPlayerRed().getYCoord());
         r = (int)(getPlayerRed().getR());
-        g.fillOval(x,y,r*2,r*2);
+        g.fillOval(x-r,y-r,r*2,r*2);
 
         g.setColor(getBall().getColor());
         x = (int)(getBall().getXCoord());
         y = (int)(getBall().getYCoord());
         r = (int)(getBall().getR());
-        g.fillOval(x,y,r*2,r*2);
+        g.fillOval(x-r,y-r,r*2,r*2);
     }
 
     public void changeScore(){
@@ -130,9 +134,8 @@ public class Game extends JPanel implements ActionListener,KeyListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Rectangle rectangle = new Rectangle(0,0,0,0);
-        playerBlue.move(playerBlue, playerRed, rectangle, rectangle);
-        ball.move(playerBlue, playerRed, rectangle, rectangle);
+        playerBlue.move(playerBlue, playerRed, boundaries, goalBoundaries);
+        ball.move(playerBlue, playerRed, boundaries, goalBoundaries);
         changeScore();
         repaint();
     }
