@@ -56,6 +56,7 @@ public class Ball extends Object {
             }
         }
     }
+
     public String checkIfGoal(){
         if(getYCoord() > 280 && getYCoord() < 480 && getXCoord() <= 70){
             return "blue";
@@ -65,6 +66,7 @@ public class Ball extends Object {
         }
         return null;
     }
+
     @Override
     public void move(Player player1, Player player2, Rectangle boundaries, Rectangle goalBoundaries) {
         checkCollisions(player1, player2, boundaries, goalBoundaries);
