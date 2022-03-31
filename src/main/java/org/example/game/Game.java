@@ -33,9 +33,9 @@ public class Game extends JPanel implements ActionListener,KeyListener {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         String path = "assets/pitch_resized.png";
         backgroundImage = toolkit.getImage(path);
-        playerRed = new AlivePlayer((float)SCREEN_W/4 - 215,(float)SCREEN_H/2 - 120, Color.RED);
-        playerBlue = new AlivePlayer((float)SCREEN_W/2 + 480,(float)SCREEN_H/2 - 120, Color.BLUE);
-        ball = new Ball((float)SCREEN_W/2 - 30 ,(float)SCREEN_H/2 - 120,Color.WHITE);
+        playerRed = new AlivePlayer((float)SCREEN_W/4 - 210,(float)SCREEN_H/2 - 90, Color.RED);
+        playerBlue = new AlivePlayer((float)SCREEN_W - 110,(float)SCREEN_H/2 - 90, Color.BLUE);
+        ball = new Ball((float)SCREEN_W/2 ,(float)SCREEN_H/2 - 90,Color.WHITE);
         boundaries = new Rectangle(78, 54, 1123, 613);
         goalBoundaries = new Rectangle(78, 275, 1123, 170);
         addKeyListener(this);
@@ -130,24 +130,24 @@ public class Game extends JPanel implements ActionListener,KeyListener {
     }
 
     public void newRound(){
-        playerRed.setYCoord((float)SCREEN_H/2 - 120);
-        playerRed.setXCoord((float)SCREEN_W/4 - 215);
-        playerBlue.setYCoord((float)SCREEN_H/2 - 120);
-        playerBlue.setXCoord((float)SCREEN_W/2 + 480);
+        playerRed.setYCoord((float)SCREEN_H/2 - 90);
+        playerRed.setXCoord((float)SCREEN_W/4 - 210);
+        playerBlue.setYCoord((float)SCREEN_H/2 - 90);
+        playerBlue.setXCoord((float)SCREEN_W - 110);
         playerRed.setXVector(0);
         playerRed.setYVector(0);
         playerBlue.setXVector(0);
         playerBlue.setYVector(0);
-        ball = new Ball((float)SCREEN_W/2 - 30 ,(float)SCREEN_H/2 - 120,Color.WHITE);
+        ball = new Ball((float)SCREEN_W/2 ,(float)SCREEN_H/2 - 90,Color.WHITE);
     }
     public void newGame(){
-        playerRed = new AlivePlayer((float)SCREEN_W/4 - 215,(float)SCREEN_H/2 - 120, Color.RED);
-        playerBlue = new AlivePlayer((float)SCREEN_W/2 + 480,(float)SCREEN_H/2 - 120, Color.BLUE);
+        playerRed = new AlivePlayer((float)SCREEN_W/4 - 210,(float)SCREEN_H/2 - 90, Color.RED);
+        playerBlue = new AlivePlayer((float)SCREEN_W - 110,(float)SCREEN_H/2 - 90, Color.BLUE);
         playerRed.setXVector(0);
         playerRed.setYVector(0);
         playerBlue.setXVector(0);
         playerBlue.setYVector(0);
-        ball = new Ball((float)SCREEN_W/2 - 30 ,(float)SCREEN_H/2 - 120,Color.WHITE);
+        ball = new Ball((float)SCREEN_W/2 ,(float)SCREEN_H/2 - 90,Color.WHITE);
         boundaries = new Rectangle(78, 54, 1123, 613);
         goalBoundaries = new Rectangle(78, 275, 1123, 170);
         timer.restart();
