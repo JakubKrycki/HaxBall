@@ -57,10 +57,10 @@ public class Ball extends Object {
         }
     }
     public String checkIfGoal(){
-        if(getYCoord() > 280 && getYCoord() < 480 && getXCoord() <= 78){
+        if(getYCoord() > 280 && getYCoord() < 480 && getXCoord() <= 70){
             return "blue";
         }
-        else if(getYCoord() > 280 && getYCoord() < 480 && getXCoord() >= 1201){
+        else if(getYCoord() > 280 && getYCoord() < 480 && getXCoord() >= 1210){
             return "red";
         }
         return null;

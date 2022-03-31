@@ -29,25 +29,25 @@ public abstract class Object {
         this.color = color;
     }
     public int checkX(int x){
-        if(x < 0)
-            return 0;
-        else if(x > 1290 - r)
-            return (int)(1290-r);
+        if(x < r)
+            return (int)r;
+        else if(x > 1270 - r)
+            return (int)(1270- r);
         return x;
     }
     public int checkY(int y){
-        if(y < 0)
-            return 0;
-        else if(y > 720)
-            return 720;
+        if(y < r)
+            return (int)r;
+        else if(y > 720 - r)
+            return (int)(720 - r);
         return y;
     }
     public void checkNotHittingSoccerGoal(int x, int y){
         if(y < 450 && y > 245 && x > 1180){
             xCoord = 1180;
         }
-        if(y < 450 && y > 245 && x < 46){
-            xCoord = 46;
+        if(y < 450 && y > 245 && x < 100){
+            xCoord = 100;
         }
     }
 
