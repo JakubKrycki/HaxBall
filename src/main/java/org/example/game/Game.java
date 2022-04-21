@@ -2,6 +2,7 @@ package org.example.game;
 
 import lombok.Data;
 import org.example.game.objects.ball.Ball;
+import org.example.game.objects.bonus.Bonus;
 import org.example.game.objects.players.AlivePlayer;
 import org.example.game.objects.players.Player;
 
@@ -19,6 +20,7 @@ public class Game extends JPanel implements ActionListener,KeyListener {
     private Player playerRed;
     private Player playerBlue;
     private Ball ball;
+    private Bonus bonus;
     private Rectangle goalBoundaries;
     private Rectangle boundaries;
     private String score = "0 : 0";
@@ -36,6 +38,7 @@ public class Game extends JPanel implements ActionListener,KeyListener {
         playerRed = new AlivePlayer((float)SCREEN_W/4 - 210,(float)SCREEN_H/2 - 90, Color.RED);
         playerBlue = new AlivePlayer((float)SCREEN_W - 110,(float)SCREEN_H/2 - 90, Color.BLUE);
         ball = new Ball((float)SCREEN_W/2 ,(float)SCREEN_H/2 - 90,Color.WHITE);
+        bonus = new Bonus(0,0,Color.ORANGE);
         boundaries = new Rectangle(78, 54, 1123, 613);
         goalBoundaries = new Rectangle(78, 275, 1123, 170);
         addKeyListener(this);
@@ -91,6 +94,14 @@ public class Game extends JPanel implements ActionListener,KeyListener {
         y = (int)(getBall().getYCoord());
         r = (int)(getBall().getR());
         g.fillOval(x-r,y-r,r*2,r*2);
+
+        if(getBonus().canBeDrawn(getTime(),getPlayerBlue(),getPlayerRed())){
+            g.setColor(getBonus().getColor());
+            x = (int)(getBonus().getXCoord());
+            y = (int)(getBonus().getYCoord());
+            r = (int)(getBonus().getR());
+            g.fillOval(x-r,y-r,r*2,r*2);
+        }
     }
 
     void printTime(Graphics g){
@@ -138,7 +149,10 @@ public class Game extends JPanel implements ActionListener,KeyListener {
         playerRed.setYVector(0);
         playerBlue.setXVector(0);
         playerBlue.setYVector(0);
+        playerBlue.setSpeed(playerBlue.getStartingSpeed());
+        playerRed.setSpeed(playerRed.getStartingSpeed());
         ball = new Ball((float)SCREEN_W/2 ,(float)SCREEN_H/2 - 90,Color.WHITE);
+        bonus = new Bonus(0,0,Color.ORANGE);
     }
     public void newGame(){
         playerRed = new AlivePlayer((float)SCREEN_W/4 - 210,(float)SCREEN_H/2 - 90, Color.RED);
@@ -148,6 +162,7 @@ public class Game extends JPanel implements ActionListener,KeyListener {
         playerBlue.setXVector(0);
         playerBlue.setYVector(0);
         ball = new Ball((float)SCREEN_W/2 ,(float)SCREEN_H/2 - 90,Color.WHITE);
+        bonus = new Bonus(0,0,Color.ORANGE);
         boundaries = new Rectangle(78, 54, 1123, 613);
         goalBoundaries = new Rectangle(78, 275, 1123, 170);
         timer.restart();
@@ -212,16 +227,16 @@ public class Game extends JPanel implements ActionListener,KeyListener {
     public void keyPressed(KeyEvent e) {
         int button = e.getKeyCode();
         if(button == KeyEvent.VK_DOWN){
-            playerBlue.setYVector(5);
+            playerBlue.setYVector(playerBlue.getSpeed());
         }
         if(button == KeyEvent.VK_UP){
-            playerBlue.setYVector(-5 );
+            playerBlue.setYVector(-playerBlue.getSpeed());
         }
         if(button == KeyEvent.VK_RIGHT){
-            playerBlue.setXVector(5);
+            playerBlue.setXVector(playerBlue.getSpeed());
         }
         if(button == KeyEvent.VK_LEFT){
-            playerBlue.setXVector(-5);
+            playerBlue.setXVector(-playerBlue.getSpeed());
         }
         if(button == KeyEvent.VK_N && !(gameFinished.equals("no"))){
             startNewGame = true;
@@ -254,8 +269,8 @@ public class Game extends JPanel implements ActionListener,KeyListener {
             }
         }
         else{
-            playerBlue.move(playerBlue, playerRed, boundaries, goalBoundaries);
-            ball.move(playerBlue, playerRed, boundaries, goalBoundaries);
+            playerBlue.move(playerBlue, playerRed, boundaries, goalBoundaries, bonus);
+            ball.move(playerBlue, playerRed, boundaries, goalBoundaries, bonus);
             addGoal(ball.checkIfGoal());
             changeScore();
             time += timer.getDelay();

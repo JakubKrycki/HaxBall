@@ -1,6 +1,7 @@
 package org.example.game.objects.ball;
 
 import org.example.game.objects.Object;
+import org.example.game.objects.bonus.Bonus;
 import org.example.game.objects.players.Player;
 
 import java.awt.*;
@@ -68,7 +69,7 @@ public class Ball extends Object {
     }
 
     @Override
-    public void move(Player player1, Player player2, Rectangle boundaries, Rectangle goalBoundaries) {
+    public void move(Player player1, Player player2, Rectangle boundaries, Rectangle goalBoundaries, Bonus bonus) {
         checkCollisions(player1, player2, boundaries, goalBoundaries);
 
         setXCoord(getXCoord() + getXVector());

@@ -10,7 +10,7 @@ import static org.example.Main.SCREEN_W;
 
 public class Window {
 
-    private Game game;
+    private final Game game;
     private final JFrame frame = new JFrame();
 
     public Window(){

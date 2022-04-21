@@ -11,10 +11,15 @@ import static org.example.Main.SCREEN_W;
 public abstract class Player extends Object {
 
     private int points = 0;
+    private int speed = 5;
+
     public Player(float x, float y, Color color){
         super(x, y, 0.1f, color);
     }
 
+    public int getStartingSpeed(){
+        return 5;
+    }
     public int checkX(int x){
         if(x < getR())
             return (int)getR();
