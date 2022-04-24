@@ -39,4 +39,11 @@ public abstract class Player extends Object {
             setXCoord(SCREEN_W/4 - 215);
         }
     }
+
+    public void getReadyToNextRound(float x, float y){
+        setXCoord(x);
+        setYCoord(y);
+        setXVector(0);
+        setYVector(0);
+    }
 }
