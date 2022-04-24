@@ -11,8 +11,10 @@ import static org.example.Main.SCREEN_W;
 public abstract class Player extends Object {
 
     private int points = 0;
-    public Player(float x, float y, Color color){
+    private char side;
+    public Player(float x, float y, char side, Color color){
         super(x, y, 0.1f, color);
+        this.side = side;
     }
 
     public int checkX(int x){
@@ -37,5 +39,4 @@ public abstract class Player extends Object {
             setXCoord(SCREEN_W/4 - 215);
         }
     }
-
 }

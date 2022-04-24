@@ -19,11 +19,33 @@ public class Ball extends Object {
         float ySign = getSignOfNumber(-deltaY);// 1 or -1 or 0
         if(deltaX != 0) {
             float a = (deltaY) / (deltaX);//a = (y2-y1)/(x2-x1)
-            setXVector((float)(xSign*Math.sqrt(30/(Math.pow(a, 2)+1))));
+            setXVector((float)(xSign*Math.sqrt(50/(Math.pow(a, 2)+1))));
             setYVector(ySign*Math.abs(getXVector()*a));
         }else{
             setXVector(0);
-            setYVector(-(float)Math.sqrt(30)*ySign);
+            setYVector(-(float)Math.sqrt(50)*ySign);
+        }
+    }
+
+    public void bothPlayersCollision(Player player1, Player player2){
+        if(player1.getXCoord() == player2.getXCoord()){//ball has to go up or down
+            setXVector(10);
+            setYVector(0);
+            if(getXCoord() < player1.getXCoord())
+                setXVector(-1*getXVector());
+        }else if(player1.getYCoord() == player2.getYCoord()){
+            setXVector(0);
+            setYVector(10);
+            if(getYCoord() < player1.getYCoord())
+                setYVector(-1*getYVector());
+        }else{
+            float xS = (player1.getXCoord()+player2.getXCoord())/2;
+            float yS = (player1.getYCoord()+player2.getYCoord())/2;
+            double dist = distanceFromPoint(xS, yS);
+            float deltaX = getXCoord() - xS;
+            float deltaY = getYCoord() - yS;
+            setXVector(deltaX*10/(float)dist);
+            setYVector(deltaY*10/(float)dist);
         }
     }
 
@@ -32,7 +54,8 @@ public class Ball extends Object {
             playerCollision(player1);
         if(isPlayerHit(player2))
             playerCollision(player2);
-
+        if(isPlayerHit(player1) && isPlayerHit(player2))
+            bothPlayersCollision(player1, player2);
         checkWallHit(boundaries, goalBoundaries);
     }
 
@@ -68,12 +91,12 @@ public class Ball extends Object {
     }
 
     @Override
-    public void move(Player player1, Player player2, Rectangle boundaries, Rectangle goalBoundaries) {
+    public void move(Player player1, Player player2, Ball ball, Rectangle boundaries, Rectangle goalBoundaries) {
         checkCollisions(player1, player2, boundaries, goalBoundaries);
-
         setXCoord(getXCoord() + getXVector());
         setYCoord(getYCoord() + getYVector());
-        setXVector((float)0.95*getXVector());
-        setYVector((float)0.95*getYVector());
+        setXVector((float)0.96*getXVector());
+        setYVector((float)0.96*getYVector());
+
     }
 }

@@ -1,6 +1,7 @@
 package org.example.game.objects;
 
 import lombok.Data;
+import org.example.game.objects.ball.Ball;
 import org.example.game.objects.players.Player;
 
 import java.awt.*;
@@ -18,7 +19,7 @@ public abstract class Object {
 
     public Object(){}
 
-    public abstract void move(Player player1, Player player2, Rectangle boundaries, Rectangle goalBoundaries);
+    public abstract void move(Player player1, Player player2, Ball ball, Rectangle boundaries, Rectangle goalBoundaries);
 
     public Object(float x, float y, float deltaT, Color color) {
         xCoord = x;
@@ -35,6 +36,10 @@ public abstract class Object {
 
     public double distance(Object object){
         return Math.sqrt(Math.pow(xCoord- object.xCoord, 2)+Math.pow(yCoord- object.yCoord, 2));
+    }
+
+    public double distanceFromPoint(float x, float y){
+        return Math.sqrt(Math.pow(xCoord-x, 2)+Math.pow(yCoord-y, 2));
     }
 
     public float getSignOfNumber(float number){

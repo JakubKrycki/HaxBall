@@ -3,6 +3,7 @@ package org.example.game;
 import lombok.Data;
 import org.example.game.objects.ball.Ball;
 import org.example.game.objects.players.AlivePlayer;
+import org.example.game.objects.players.Bot;
 import org.example.game.objects.players.Player;
 
 import java.awt.*;
@@ -33,8 +34,8 @@ public class Game extends JPanel implements ActionListener,KeyListener {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         String path = "assets/pitch_resized.png";
         backgroundImage = toolkit.getImage(path);
-        playerRed = new AlivePlayer((float)SCREEN_W/4 - 210,(float)SCREEN_H/2 - 90, Color.RED);
-        playerBlue = new AlivePlayer((float)SCREEN_W - 110,(float)SCREEN_H/2 - 90, Color.BLUE);
+        playerBlue = new Bot((float)SCREEN_W/4 - 210,(float)SCREEN_H/2 - 90, 'L', Color.RED);
+        playerRed = new Bot((float)SCREEN_W - 110,(float)SCREEN_H/2 - 90, 'R', Color.BLUE);
         ball = new Ball((float)SCREEN_W/2 ,(float)SCREEN_H/2 - 90,Color.WHITE);
         boundaries = new Rectangle(78, 54, 1123, 613);
         goalBoundaries = new Rectangle(78, 275, 1123, 170);
@@ -131,9 +132,9 @@ public class Game extends JPanel implements ActionListener,KeyListener {
 
     public void newRound(){
         playerRed.setYCoord((float)SCREEN_H/2 - 90);
-        playerRed.setXCoord((float)SCREEN_W/4 - 210);
+        playerRed.setXCoord((float)SCREEN_W - 110);
         playerBlue.setYCoord((float)SCREEN_H/2 - 90);
-        playerBlue.setXCoord((float)SCREEN_W - 110);
+        playerBlue.setXCoord((float)SCREEN_W/4 - 210);
         playerRed.setXVector(0);
         playerRed.setYVector(0);
         playerBlue.setXVector(0);
@@ -141,8 +142,8 @@ public class Game extends JPanel implements ActionListener,KeyListener {
         ball = new Ball((float)SCREEN_W/2 ,(float)SCREEN_H/2 - 90,Color.WHITE);
     }
     public void newGame(){
-        playerRed = new AlivePlayer((float)SCREEN_W/4 - 210,(float)SCREEN_H/2 - 90, Color.RED);
-        playerBlue = new AlivePlayer((float)SCREEN_W - 110,(float)SCREEN_H/2 - 90, Color.BLUE);
+        playerBlue = new Bot((float)SCREEN_W/4 - 210,(float)SCREEN_H/2 - 90, 'L', Color.RED);
+        playerRed = new Bot((float)SCREEN_W - 110,(float)SCREEN_H/2 - 90, 'R', Color.BLUE);
         playerRed.setXVector(0);
         playerRed.setYVector(0);
         playerBlue.setXVector(0);
@@ -254,8 +255,9 @@ public class Game extends JPanel implements ActionListener,KeyListener {
             }
         }
         else{
-            playerBlue.move(playerBlue, playerRed, boundaries, goalBoundaries);
-            ball.move(playerBlue, playerRed, boundaries, goalBoundaries);
+            playerBlue.move(playerBlue, playerRed, ball, boundaries, goalBoundaries);
+            playerRed.move(playerRed, playerBlue, ball, boundaries, goalBoundaries);
+            ball.move(playerBlue, playerRed, ball, boundaries, goalBoundaries);
             addGoal(ball.checkIfGoal());
             changeScore();
             time += timer.getDelay();
