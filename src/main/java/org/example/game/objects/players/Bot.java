@@ -29,21 +29,24 @@ public class Bot extends Player{
     }
 
     public void checkDistance(Ball ball, Player enemy, Rectangle goalBoundaries){
-        if(distance(ball) > enemy.distance(ball) && (distance(ball) > 2*getR() || Math.abs(distance(ball)-enemy.distance(ball)) < getR())){
+        if(Math.abs(distance(ball)-enemy.distance(ball)) > 0.5*getR()){
             //to goal line
             float xS = (getSide() == 'L')? goalBoundaries.x : goalBoundaries.x+goalBoundaries.width;
             float yS = (float)(goalBoundaries.y+0.5*goalBoundaries.height);
             double dist = distanceFromPoint(xS, yS);
-            if(Math.abs(getYCoord()-(yS+ball.getYCoord())/2) >= 5){
+            float a = (yS - ball.getYCoord())/(xS-ball.getXCoord());
+            float b = yS - a*xS;
+            float tempY = a*getXCoord() + b;
+            if(Math.abs(getYCoord()-tempY) >= 5){
                 setXVector(0);
-                if(getYCoord() > (yS+ball.getYCoord())/2)
+                if(getYCoord() > tempY)
                     setYVector(-5);
                 else
                     setYVector(5);
             }else{
-                if(getSide() == 'L' && xS + getR() >= getXCoord())
+                if(getSide() == 'L' && xS + getR() <= getXCoord())
                     setXVector(0);
-                else if(getSide() == 'R' && xS - getR() <= getXCoord())
+                else if(getSide() == 'R' && xS - getR() >= getXCoord())
                     setXVector(0);
                 else{
                     float xV = xS - getXCoord();
