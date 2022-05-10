@@ -105,6 +105,4 @@ public class Bot extends Player{
         else
             toBall(ball);
     }
-
-
 }

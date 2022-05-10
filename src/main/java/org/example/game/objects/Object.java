@@ -56,7 +56,6 @@ public abstract class Object {
             enemy.setYCoord(enemy.getYCoord()-vectorY);
             enemy.setXCoord(enemy.getXCoord()-vectorX);
         }
-
     }
 
 }
