@@ -46,4 +46,17 @@ public abstract class Object {
         return (number != 0)? number/Math.abs(number) : 0;
     }
 
+    public void ridOfCollission(Player enemy){
+        int vectorY = Float.compare(enemy.getYCoord(), getYCoord());
+        int vectorX = Float.compare(enemy.getXCoord(), getXCoord());
+
+        while(checkHit(enemy)){
+            setYCoord(getYCoord()+vectorY);
+            setXCoord(getXCoord()+vectorX);
+            enemy.setYCoord(enemy.getYCoord()-vectorY);
+            enemy.setXCoord(enemy.getXCoord()-vectorX);
+        }
+
+    }
+
 }

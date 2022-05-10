@@ -5,20 +5,25 @@ import org.example.game.objects.ball.Ball;
 import java.awt.*;
 
 public class Bot extends Player{
-
-    public Bot(float x, float y, char side, Color color) {
+    int mode;
+    public Bot(float x, float y, char side, Color color, int mode) {
         super(x, y, side, color);
+        this.mode = mode;
     }
 
     @Override
     public void move(Player active, Player enemy, Ball ball, Rectangle boundaries, Rectangle goalBoundaries){
-        //bot1(ball); // bot1
-        bot2(ball, enemy, goalBoundaries);
-        //bot3(ball, enemy, goalBoundaries); // bot2
+        switch (mode) {
+            case 1 -> bot1(ball); // bot1
+            case 2 -> bot2(ball, enemy, goalBoundaries);
+            case 3 -> bot3(ball, enemy, goalBoundaries); // bot2
+            case 4 -> bot4(ball, enemy, goalBoundaries); // bot3
+        }
         if(enemy.distanceFromPoint(getXCoord()+getXVector(), getYCoord()) >= getR() + enemy.getR())
             setXCoord(checkX((int) (getXCoord() + getXVector())));
         if(enemy.distanceFromPoint(getXCoord(), getYCoord()+getYVector()) >= getR() + enemy.getR())
             setYCoord(checkY((int) (getYCoord() + getYVector())));
+        ridOfCollission(enemy);
         checkNotHittingSoccerGoal((int)getXCoord(),(int)getYCoord());
     }
 
@@ -31,7 +36,7 @@ public class Bot extends Player{
     }
 
     public void bot3(Ball ball, Player enemy, Rectangle goalBoundaries){//check distance and decide to go to ball or stay near goal line
-        if(distance(ball)-enemy.distance(ball) > 0.5*getR()){//TODO fix
+        if(distance(ball)>enemy.distance(ball)){
             toGoalLine(ball, enemy, goalBoundaries);
         }else
             toBall(ball);
@@ -45,46 +50,61 @@ public class Bot extends Player{
     }
 
     public void toGoalLine(Ball ball, Player enemy, Rectangle goalBoundaries){
-        float xS = (getSide() == 'L')? goalBoundaries.x : goalBoundaries.x+goalBoundaries.width;
+        float xS = (getSide() == 'L')? goalBoundaries.x + getR() : goalBoundaries.x+goalBoundaries.width - getR();
         float yS = (float)(goalBoundaries.y+0.5*goalBoundaries.height);
         double dist = distanceFromPoint(xS, yS);
         float a = (yS - ball.getYCoord())/(xS-ball.getXCoord());
         float b = yS - a*xS;
         float tempY = a*getXCoord() + b;
         if(Math.abs(getYCoord()-tempY) >= 5){
-            setXVector(0);
             if(getYCoord() > tempY)
                 setYVector(-5);
             else
                 setYVector(5);
         }else{
-            if(getSide() == 'L' && xS + getR() <= getXCoord())
-                setXVector(0);
-            else if(getSide() == 'R' && xS - getR() >= getXCoord())
-                setXVector(0);
-            else{
-                float xV = xS - getXCoord();
-                setXVector(xV * 5 / (float)dist);
-            }
             float yV = yS - getYCoord();
             setYVector(yV * 5 / (float)dist);
         }
+        setXVector(5*getSignOfNumber(xS - getXCoord()));
     }
 
-    /* TODO fourth algorithm
-    ustawia się do strzału jeśli jest w odległości <0.5*R od piłki, czyli
-    if(distance(ball) < ball.getR() + 1.5*getR())
-    //ustawia się do strzału
-    //jeśli jest pomiędzy bramką przeciwnika a piłką to musi przejść na drugą stronę, robi to krótszą trasą
-    //jeśli piłka jest już pomiędzy graczem a bramką przeciwnika to dąży do Y takiego żeby był na
-    //funkcji liniowej piłka-bramka_przeciwnika
-    //jeśli będzie w odległości <5 od tego Y to rusza się po prostej gracz-piłka
+    public void toStrike(Ball ball, Rectangle goalBoundaries) {
+        int enemyGoalX = getSide() == 'L' ? goalBoundaries.x + goalBoundaries.width: goalBoundaries.x;
 
-     */
+        if (between(getXCoord(), ball.getXCoord(), enemyGoalX))
+            makeLineWithBall(ball, goalBoundaries);
+        else{
+            setXVector(5*getSignOfNumber(ball.getXCoord() - getXCoord()));
+            setYVector(0);
+        }
+    }
 
-    /* TODO fourth bot
-    bot 3 aż do odległości <0.5*R od piłki
-    wtedy fourth algorithm
-     */
+    public boolean between(float left, float middle, float right){
+        return ((left < middle && middle < right) || (left > middle && middle > right));
+    }
+
+    public void makeLineWithBall(Ball ball, Rectangle goalBoundaries){
+        //tworzymy prostą w dwóch punktów, piłki i gracza, sprawdzamy czy dla goalX wartość y w tej funkcji znajdzie się pomiędzy bramki
+        int enemyGoalX = getSide() == 'L' ? goalBoundaries.x + goalBoundaries.width: goalBoundaries.x;
+        float a = (getYCoord()-ball.getYCoord())/(getXCoord() - ball.getXCoord());
+        float b = getYCoord() - a*getXCoord();
+        float y = a*enemyGoalX + b;
+        if(y <= goalBoundaries.y)//strzał by był nad bramkę
+            setYVector(-5);
+        else if(y >= goalBoundaries.y + goalBoundaries.height)//strzał by był nad bramkę
+            setYVector(5);
+        else
+            toBall(ball);
+    }
+
+    public void bot4(Ball ball, Player enemy, Rectangle goalBoundaries){
+        if(distance(ball)>enemy.distance(ball))
+            toGoalLine(ball, enemy, goalBoundaries);
+        else if(distance(ball) < ball.getR() + 1.5*getR())
+            toStrike(ball, goalBoundaries);
+        else
+            toBall(ball);
+    }
+
 
 }

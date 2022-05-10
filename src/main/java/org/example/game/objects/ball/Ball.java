@@ -1,12 +1,14 @@
 package org.example.game.objects.ball;
 
+import lombok.Data;
 import org.example.game.objects.Object;
 import org.example.game.objects.players.Player;
 
 import java.awt.*;
 
+@Data
 public class Ball extends Object {
-
+    private float speed = (float)Math.sqrt(50);
     public Ball(float x, float y, Color color){
         super(x, y, 0.1f, color);
         this.setR(20);
@@ -19,23 +21,23 @@ public class Ball extends Object {
         float ySign = getSignOfNumber(-deltaY);// 1 or -1 or 0
         if(deltaX != 0) {
             float a = (deltaY) / (deltaX);//a = (y2-y1)/(x2-x1)
-            setXVector((float)(xSign*Math.sqrt(50/(Math.pow(a, 2)+1))));
+            setXVector((float)(xSign*speed/Math.sqrt(Math.pow(a, 2)+1)));
             setYVector(ySign*Math.abs(getXVector()*a));
         }else{
             setXVector(0);
-            setYVector(-(float)Math.sqrt(50)*ySign);
+            setYVector(-speed*ySign);
         }
     }
 
     public void bothPlayersCollision(Player player1, Player player2){
         if(player1.getXCoord() == player2.getXCoord()){//ball has to go up or down
-            setXVector(10);
+            setXVector((float)Math.sqrt(2)*speed);
             setYVector(0);
             if(getXCoord() < player1.getXCoord())
                 setXVector(-1*getXVector());
         }else if(player1.getYCoord() == player2.getYCoord()){
             setXVector(0);
-            setYVector(10);
+            setYVector((float)Math.sqrt(2)*speed);
             if(getYCoord() < player1.getYCoord())
                 setYVector(-1*getYVector());
         }else{
@@ -44,8 +46,8 @@ public class Ball extends Object {
             double dist = distanceFromPoint(xS, yS);
             float deltaX = getXCoord() - xS;
             float deltaY = getYCoord() - yS;
-            setXVector(deltaX*10/(float)dist);
-            setYVector(deltaY*10/(float)dist);
+            setXVector(deltaX*(float)Math.sqrt(2)*speed/(float)dist);
+            setYVector(deltaY*(float)Math.sqrt(2)*speed/(float)dist);
         }
     }
 
@@ -97,6 +99,7 @@ public class Ball extends Object {
         setYCoord(getYCoord() + getYVector());
         setXVector((float)0.96*getXVector());
         setYVector((float)0.96*getYVector());
-
     }
+
+
 }

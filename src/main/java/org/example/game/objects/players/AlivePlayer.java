@@ -15,6 +15,7 @@ public class AlivePlayer extends Player{
             setXCoord(checkX((int) (getXCoord() + getXVector())));
         if(enemy.distanceFromPoint(getXCoord(), getYCoord()+getYVector()) >= getR() + enemy.getR())
             setYCoord(checkY((int) (getYCoord() + getYVector())));
+        ridOfCollission(enemy);
         checkNotHittingSoccerGoal((int)getXCoord(),(int)getYCoord());
     }
 }

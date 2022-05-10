@@ -35,7 +35,7 @@ public class Game extends JPanel implements ActionListener,KeyListener {
         String path = "assets/pitch_resized.png";
         backgroundImage = toolkit.getImage(path);
         playerBlue = new AlivePlayer((float)SCREEN_W/4 - 210,(float)SCREEN_H/2 - 90, 'L', Color.RED);
-        playerRed = new Bot((float)SCREEN_W - 110,(float)SCREEN_H/2 - 90, 'R', Color.BLUE);
+        playerRed = new Bot((float)SCREEN_W - 110,(float)SCREEN_H/2 - 90, 'R', Color.BLUE, 1);
         ball = new Ball((float)SCREEN_W/2 ,(float)SCREEN_H/2 - 90,Color.WHITE);
         boundaries = new Rectangle(78, 54, 1123, 613);
         goalBoundaries = new Rectangle(78, 275, 1123, 170);
@@ -200,17 +200,18 @@ public class Game extends JPanel implements ActionListener,KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         int button = e.getKeyCode();
+        Player alive = (playerBlue instanceof AlivePlayer)? playerBlue : playerRed;
         if(button == KeyEvent.VK_DOWN){
-            playerBlue.setYVector(5);
+            alive.setYVector(5);
         }
         if(button == KeyEvent.VK_UP){
-            playerBlue.setYVector(-5 );
+            alive.setYVector(-5 );
         }
         if(button == KeyEvent.VK_RIGHT){
-            playerBlue.setXVector(5);
+            alive.setXVector(5);
         }
         if(button == KeyEvent.VK_LEFT){
-            playerBlue.setXVector(-5);
+            alive.setXVector(-5);
         }
         if(button == KeyEvent.VK_N && !(gameFinished.equals("no"))){
             startNewGame = true;
