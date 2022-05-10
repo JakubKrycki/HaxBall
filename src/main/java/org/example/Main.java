@@ -6,6 +6,9 @@ public class Main {
     public static int SCREEN_H = 900;
 
     public static void main(String[] args){
-        new Window();
+        Client client = new Client();
+        if(client.canStartTheGame()) {
+            new Window(client.getPlayerID());
+        }
     }
 }

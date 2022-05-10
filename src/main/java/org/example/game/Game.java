@@ -17,8 +17,8 @@ import static org.example.Main.*;
 
 @Data
 public class Game extends JPanel implements ActionListener,KeyListener {
-    private Player playerRed;
-    private Player playerBlue;
+    private Player enemy;
+    private Player me;
     private Ball ball;
     private Bonus bonus;
     private Rectangle goalBoundaries;
@@ -30,13 +30,21 @@ public class Game extends JPanel implements ActionListener,KeyListener {
     private boolean startNewGame = false;
     private float time = 0;
     private Image backgroundImage;
+    private int id;
 
-    public Game(){
+    public Game(int id){
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         String path = "assets/pitch_resized.png";
         backgroundImage = toolkit.getImage(path);
-        playerRed = new AlivePlayer((float)SCREEN_W/4 - 210,(float)SCREEN_H/2 - 90, Color.RED);
-        playerBlue = new AlivePlayer((float)SCREEN_W - 110,(float)SCREEN_H/2 - 90, Color.BLUE);
+        this.id = id;
+        if(id == 1){
+            me = new AlivePlayer((float)SCREEN_W - 110,(float)SCREEN_H/2 - 90, Color.BLUE);
+            enemy = new AlivePlayer((float)SCREEN_W/4 - 210,(float)SCREEN_H/2 - 90, Color.RED);
+        }
+        else{
+            me = new AlivePlayer((float)SCREEN_W/4 - 210,(float)SCREEN_H/2 - 90, Color.RED);
+            enemy = new AlivePlayer((float)SCREEN_W - 110,(float)SCREEN_H/2 - 90, Color.BLUE);
+        }
         ball = new Ball((float)SCREEN_W/2 ,(float)SCREEN_H/2 - 90,Color.WHITE);
         bonus = new Bonus(0,0,Color.ORANGE);
         boundaries = new Rectangle(78, 54, 1123, 613);
@@ -77,16 +85,16 @@ public class Game extends JPanel implements ActionListener,KeyListener {
     }
 
     void printObjects(Graphics g){
-        g.setColor(getPlayerBlue().getColor());
-        int x = (int)(getPlayerBlue().getXCoord());
-        int y = (int)(getPlayerBlue().getYCoord());
-        int r = (int)(getPlayerBlue().getR());
+        g.setColor(getMe().getColor());
+        int x = (int)(getMe().getXCoord());
+        int y = (int)(getMe().getYCoord());
+        int r = (int)(getMe().getR());
         g.fillOval(x-r,y-r,r*2,r*2);
 
-        g.setColor(getPlayerRed().getColor());
-        x = (int)(getPlayerRed().getXCoord());
-        y = (int)(getPlayerRed().getYCoord());
-        r = (int)(getPlayerRed().getR());
+        g.setColor(getEnemy().getColor());
+        x = (int)(getEnemy().getXCoord());
+        y = (int)(getEnemy().getYCoord());
+        r = (int)(getEnemy().getR());
         g.fillOval(x-r,y-r,r*2,r*2);
 
         g.setColor(getBall().getColor());
@@ -95,7 +103,7 @@ public class Game extends JPanel implements ActionListener,KeyListener {
         r = (int)(getBall().getR());
         g.fillOval(x-r,y-r,r*2,r*2);
 
-        if(getBonus().canBeDrawn(getTime(),getPlayerBlue(),getPlayerRed())){
+        if(getBonus().canBeDrawn(getTime(),getMe(),getEnemy())){
             g.setColor(getBonus().getColor());
             x = (int)(getBonus().getXCoord());
             y = (int)(getBonus().getYCoord());
@@ -141,26 +149,40 @@ public class Game extends JPanel implements ActionListener,KeyListener {
     }
 
     public void newRound(){
-        playerRed.setYCoord((float)SCREEN_H/2 - 90);
-        playerRed.setXCoord((float)SCREEN_W/4 - 210);
-        playerBlue.setYCoord((float)SCREEN_H/2 - 90);
-        playerBlue.setXCoord((float)SCREEN_W - 110);
-        playerRed.setXVector(0);
-        playerRed.setYVector(0);
-        playerBlue.setXVector(0);
-        playerBlue.setYVector(0);
-        playerBlue.setSpeed(playerBlue.getStartingSpeed());
-        playerRed.setSpeed(playerRed.getStartingSpeed());
+        if(id == 1){
+            enemy.setYCoord((float)SCREEN_H/2 - 90);
+            enemy.setXCoord((float)SCREEN_W/4 - 210);
+            me.setYCoord((float)SCREEN_H/2 - 90);
+            me.setXCoord((float)SCREEN_W - 110);
+        }
+        else{
+            me.setYCoord((float)SCREEN_H/2 - 90);
+            me.setXCoord((float)SCREEN_W/4 - 210);
+            enemy.setYCoord((float)SCREEN_H/2 - 90);
+            enemy.setXCoord((float)SCREEN_W - 110);
+        }
+        enemy.setXVector(0);
+        enemy.setYVector(0);
+        me.setXVector(0);
+        me.setYVector(0);
+        me.setSpeed(me.getStartingSpeed());
+        enemy.setSpeed(enemy.getStartingSpeed());
         ball = new Ball((float)SCREEN_W/2 ,(float)SCREEN_H/2 - 90,Color.WHITE);
         bonus = new Bonus(0,0,Color.ORANGE);
     }
     public void newGame(){
-        playerRed = new AlivePlayer((float)SCREEN_W/4 - 210,(float)SCREEN_H/2 - 90, Color.RED);
-        playerBlue = new AlivePlayer((float)SCREEN_W - 110,(float)SCREEN_H/2 - 90, Color.BLUE);
-        playerRed.setXVector(0);
-        playerRed.setYVector(0);
-        playerBlue.setXVector(0);
-        playerBlue.setYVector(0);
+        if(id == 1){
+            me = new AlivePlayer((float)SCREEN_W - 110,(float)SCREEN_H/2 - 90, Color.BLUE);
+            enemy = new AlivePlayer((float)SCREEN_W/4 - 210,(float)SCREEN_H/2 - 90, Color.RED);
+        }
+        else{
+            me = new AlivePlayer((float)SCREEN_W/4 - 210,(float)SCREEN_H/2 - 90, Color.RED);
+            enemy = new AlivePlayer((float)SCREEN_W - 110,(float)SCREEN_H/2 - 90, Color.BLUE);
+        }
+        enemy.setXVector(0);
+        enemy.setYVector(0);
+        me.setXVector(0);
+        me.setYVector(0);
         ball = new Ball((float)SCREEN_W/2 ,(float)SCREEN_H/2 - 90,Color.WHITE);
         bonus = new Bonus(0,0,Color.ORANGE);
         boundaries = new Rectangle(78, 54, 1123, 613);
@@ -173,20 +195,40 @@ public class Game extends JPanel implements ActionListener,KeyListener {
     }
 
     public boolean checkIfGameIsOver(){
-        if(playerBlue.getPoints() >= 3){
-            gameFinished = "Blue wins";
+        if(me.getPoints() >= 3){
+            if(id == 1){
+                gameFinished = "Blue wins";
+            }
+            else{
+                gameFinished = "Red wins";
+            }
             return true;
         }
-        else if(playerRed.getPoints() >= 3){
-            gameFinished = "Red wins";
+        else if(enemy.getPoints() >= 3){
+            if(id == 1){
+                gameFinished = "Red wins";
+            }
+            else{
+                gameFinished = "Blue wins";
+            }
             return true;
         }
         else if(time >= 1000*60*3){
-            if(playerBlue.getPoints() > playerRed.getPoints()){
-                gameFinished = "Blue wins";
+            if(me.getPoints() > enemy.getPoints()){
+                if(id == 1){
+                    gameFinished = "Blue wins";
+                }
+                else{
+                    gameFinished = "Red wins";
+                }
             }
-            else if(playerRed.getPoints() > playerBlue.getPoints()){
-                gameFinished = "Red wins";
+            else if(enemy.getPoints() > me.getPoints()){
+                if(id == 1){
+                    gameFinished = "Red wins";
+                }
+                else{
+                    gameFinished = "Blue wins";
+                }
             }
             else{
                 gameFinished = "Its a draw";
@@ -203,20 +245,41 @@ public class Game extends JPanel implements ActionListener,KeyListener {
         if(whichPlayer == null){
             return;
         }
-        else if(whichPlayer.equals("blue")){
-            playerBlue.setPoints(playerBlue.getPoints()+1);
+        if(whichPlayer.equals("blue")){
+            if(id == 1){
+                me.setPoints(me.getPoints()+1);
+            }
+            else{
+                enemy.setPoints(enemy.getPoints()+1);
+            }
         }
         else if(whichPlayer.equals("red")){
-            playerRed.setPoints(playerRed.getPoints()+1);
+            if(id == 2){
+                me.setPoints(me.getPoints()+1);
+            }
+            else{
+                enemy.setPoints(enemy.getPoints()+1);
+            }
         }
         newRound();
     }
 
     public void changeScore(){
-        String s = Integer.toString(playerRed.getPoints());
+        String s;
+        if(id == 1){
+            s = Integer.toString(enemy.getPoints());
+        }
+        else{
+            s = Integer.toString(me.getPoints());
+        }
         score = s;
         score += " : ";
-        s = Integer.toString(playerBlue.getPoints());
+        if(id == 1){
+            s = Integer.toString(me.getPoints());
+        }
+        else{
+            s = Integer.toString(enemy.getPoints());
+        }
         score += s;
     }
 
@@ -227,16 +290,16 @@ public class Game extends JPanel implements ActionListener,KeyListener {
     public void keyPressed(KeyEvent e) {
         int button = e.getKeyCode();
         if(button == KeyEvent.VK_DOWN){
-            playerBlue.setYVector(playerBlue.getSpeed());
+            me.setYVector(me.getSpeed());
         }
         if(button == KeyEvent.VK_UP){
-            playerBlue.setYVector(-playerBlue.getSpeed());
+            me.setYVector(-me.getSpeed());
         }
         if(button == KeyEvent.VK_RIGHT){
-            playerBlue.setXVector(playerBlue.getSpeed());
+            me.setXVector(me.getSpeed());
         }
         if(button == KeyEvent.VK_LEFT){
-            playerBlue.setXVector(-playerBlue.getSpeed());
+            me.setXVector(-me.getSpeed());
         }
         if(button == KeyEvent.VK_N && !(gameFinished.equals("no"))){
             startNewGame = true;
@@ -247,16 +310,16 @@ public class Game extends JPanel implements ActionListener,KeyListener {
     public void keyReleased(KeyEvent e) {
         int button = e.getKeyCode();
         if(button == KeyEvent.VK_DOWN){
-            playerBlue.setYVector(0);
+            me.setYVector(0);
         }
         if(button == KeyEvent.VK_UP){
-            playerBlue.setYVector(0);
+            me.setYVector(0);
         }
         if(button == KeyEvent.VK_RIGHT){
-            playerBlue.setXVector(0);
+            me.setXVector(0);
         }
         if(button == KeyEvent.VK_LEFT){
-            playerBlue.setXVector(0);
+            me.setXVector(0);
         }
     }
 
@@ -269,8 +332,8 @@ public class Game extends JPanel implements ActionListener,KeyListener {
             }
         }
         else{
-            playerBlue.move(playerBlue, playerRed, boundaries, goalBoundaries, bonus);
-            ball.move(playerBlue, playerRed, boundaries, goalBoundaries, bonus);
+            me.move(me, enemy, boundaries, goalBoundaries, bonus);
+            ball.move(me, enemy, boundaries, goalBoundaries, bonus);
             addGoal(ball.checkIfGoal());
             changeScore();
             time += timer.getDelay();

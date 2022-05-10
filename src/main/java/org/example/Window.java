@@ -13,8 +13,8 @@ public class Window {
     private final Game game;
     private final JFrame frame = new JFrame();
 
-    public Window(){
-        game = new Game();
+    public Window(int id){
+        game = new Game(id);
         frame.add(game);
         frame.setTitle("HaxBall by Kopecki Piotr & Krycki Jakub");
         frame.setSize(SCREEN_W, SCREEN_H);
