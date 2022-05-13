@@ -10,12 +10,9 @@ public class AlivePlayer extends Player{
     }
 
     @Override
-    public void move(Player active, Player enemy, Ball ball, Rectangle boundaries, Rectangle goalBoundaries) {
-        if(enemy.distanceFromPoint(getXCoord()+getXVector(), getYCoord()) >= getR() + enemy.getR())
-            setXCoord(checkX((int) (getXCoord() + getXVector())));
-        if(enemy.distanceFromPoint(getXCoord(), getYCoord()+getYVector()) >= getR() + enemy.getR())
-            setYCoord(checkY((int) (getYCoord() + getYVector())));
-        ridOfCollission(enemy);
-        checkNotHittingSoccerGoal((int)getXCoord(),(int)getYCoord());
+    public void move(Player enemy, Ball ball, Rectangle boundaries, Rectangle goalBoundaries) {
+        setXCoord(getXCoord() + getXVector());
+        setYCoord(getYCoord() + getYVector());
+        checkWallHit(boundaries, goalBoundaries);
     }
 }

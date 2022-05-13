@@ -135,6 +135,7 @@ public class Game extends JPanel implements ActionListener,KeyListener {
         playerRed.getReadyToNextRound((float)SCREEN_W - 110, (float)SCREEN_H/2 - 90);
         ball = new Ball((float)SCREEN_W/2 ,(float)SCREEN_H/2 - 90,Color.WHITE);
     }
+
     public void newGame(){
         newRound();
         playerBlue.setPoints(0);
@@ -194,6 +195,17 @@ public class Game extends JPanel implements ActionListener,KeyListener {
         score += s;
     }
 
+    public void collisionHandler(){
+        //possibilities:
+        //player with ball x2 -> ball bounces from players -> exception when ball touches the wall and players at the same time
+        //both player with ball -> ball bounces from player -> exception when ball touches the wall and player at the same time
+        //player with player -> ridOfCollision() in object class
+        ball.checkCollisions(playerBlue, playerRed, boundaries, goalBoundaries);
+        ball.ridOfCollision(playerBlue, boundaries, goalBoundaries);
+        ball.ridOfCollision(playerRed, boundaries, goalBoundaries);
+        playerBlue.ridOfCollision(playerRed, boundaries, goalBoundaries);
+    }
+
     @Override
     public void keyTyped(KeyEvent e) {}
 
@@ -244,9 +256,10 @@ public class Game extends JPanel implements ActionListener,KeyListener {
             }
         }
         else{
-            playerBlue.move(playerBlue, playerRed, ball, boundaries, goalBoundaries);
-            playerRed.move(playerRed, playerBlue, ball, boundaries, goalBoundaries);
-            ball.move(playerBlue, playerRed, ball, boundaries, goalBoundaries);
+            playerBlue.move(playerRed, ball, boundaries, goalBoundaries);
+            playerRed.move(playerBlue, ball, boundaries, goalBoundaries);
+            collisionHandler();
+            ball.move(null, null, boundaries, goalBoundaries);
             addGoal(ball.checkIfGoal());
             changeScore();
             time += timer.getDelay();

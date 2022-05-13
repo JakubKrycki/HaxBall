@@ -2,9 +2,11 @@ package org.example.game.objects.players;
 
 import lombok.Data;
 import org.example.game.objects.Object;
+import org.example.game.objects.ball.Ball;
 
 import java.awt.*;
 
+import static org.example.Main.SCREEN_H;
 import static org.example.Main.SCREEN_W;
 
 @Data
@@ -17,26 +19,31 @@ public abstract class Player extends Object {
         this.side = side;
     }
 
-    public int checkX(int x){
-        if(x < getR())
-            return (int)getR();
-        else if(x > 1295 - 2*getR())
-            return (int)(1295-2*getR());
-        return x;
+    @Override
+    public void checkWallHit(Rectangle boundaries, Rectangle goalBoundaries){
+        if (getYCoord() <= getR())//up & down
+            setYCoord(getR());
+        else if(getYCoord() >= boundaries.y + boundaries.height + getR() - 10)
+            setYCoord(boundaries.y + boundaries.height + getR() - 10);
+
+        if (getXCoord() <= getR())//up & down
+            setXCoord(getR());
+        else if(getXCoord() >= boundaries.x + boundaries.width + getR())
+            setXCoord(boundaries.x + boundaries.width + getR());
+
+        checkGoalHit(goalBoundaries);
     }
-    public int checkY(int y){
-        if(y < getR())
-            return (int)getR();
-        else if(y > 720 - getR())
-            return (int)(720 - getR());
-        return y;
-    }
-    public void checkNotHittingSoccerGoal(int x, int y){
-        if(y < 450 && y > 245 && x > 1180){
-            setXCoord(1180);
-        }
-        if(y < 450 && y > 245 && x < SCREEN_W/4 - 215){
-            setXCoord(SCREEN_W/4 - 215);
+
+    public void checkGoalHit(Rectangle goalBoundaries){
+        if(getXCoord() - getR() <= goalBoundaries.x || getXCoord() + getR() >= goalBoundaries.x + goalBoundaries.width) {
+            if (between(getYCoord(), goalBoundaries.y, getYCoord() + getR()))
+                setYCoord(goalBoundaries.y - getR());
+            else if (between(getYCoord(), goalBoundaries.y, getYCoord() - getR()))
+                setYCoord(goalBoundaries.y + getR());
+            else if (between(getYCoord(), goalBoundaries.y + goalBoundaries.height, getYCoord() + getR()))
+                setYCoord(goalBoundaries.y + goalBoundaries.height - getR());
+            else if (between(getYCoord(), goalBoundaries.y + goalBoundaries.height, getYCoord() - getR()))
+                setYCoord(goalBoundaries.y + goalBoundaries.height + getR());
         }
     }
 

@@ -19,7 +19,8 @@ public abstract class Object {
 
     public Object(){}
 
-    public abstract void move(Player player1, Player player2, Ball ball, Rectangle boundaries, Rectangle goalBoundaries);
+    public abstract void move(Player enemy, Ball ball, Rectangle boundaries, Rectangle goalBoundaries);
+    public abstract void checkWallHit(Rectangle boundaries, Rectangle goalBoundaries);
 
     public Object(float x, float y, float deltaT, Color color) {
         xCoord = x;
@@ -46,16 +47,22 @@ public abstract class Object {
         return (number != 0)? number/Math.abs(number) : 0;
     }
 
-    public void ridOfCollission(Player enemy){
+    public boolean between(float left, float middle, float right){
+        return ((left < middle && middle < right) || (left > middle && middle > right));
+    }
+
+    public void ridOfCollision(Player enemy, Rectangle boundaries, Rectangle goalBoundaries){
         int vectorY = Float.compare(enemy.getYCoord(), getYCoord());
         int vectorX = Float.compare(enemy.getXCoord(), getXCoord());
 
         while(checkHit(enemy)){
-            setYCoord(getYCoord()+vectorY);
-            setXCoord(getXCoord()+vectorX);
-            enemy.setYCoord(enemy.getYCoord()-vectorY);
-            enemy.setXCoord(enemy.getXCoord()-vectorX);
+            setYCoord(getYCoord()-vectorY);
+            setXCoord(getXCoord()-vectorX);
+            enemy.setYCoord(enemy.getYCoord()+vectorY);
+            enemy.setXCoord(enemy.getXCoord()+vectorX);
+            checkWallHit(boundaries, goalBoundaries);
+            enemy.checkWallHit(boundaries, goalBoundaries);
         }
-    }
 
+    }
 }

@@ -52,12 +52,12 @@ public class Ball extends Object {
     }
 
     public void checkCollisions(Player player1, Player player2, Rectangle boundaries, Rectangle goalBoundaries){
-        if(isPlayerHit(player1))
-            playerCollision(player1);
-        if(isPlayerHit(player2))
-            playerCollision(player2);
         if(isPlayerHit(player1) && isPlayerHit(player2))
             bothPlayersCollision(player1, player2);
+        else if(isPlayerHit(player1))
+            playerCollision(player1);
+        else if(isPlayerHit(player2))
+            playerCollision(player2);
         checkWallHit(boundaries, goalBoundaries);
     }
 
@@ -65,19 +65,25 @@ public class Ball extends Object {
         return distance(object) <= getR()+object.getR();
     }
 
+    @Override
     public void checkWallHit(Rectangle boundaries, Rectangle goalBoundaries){
-        //up or down
-        if(getYCoord() - getR() <= boundaries.y || getYCoord() + getR() >= boundaries.y + boundaries.height){
+        if(getYCoord() - getR() <= boundaries.y || getYCoord() + getR() >= boundaries.y + boundaries.height){//up & down walls
+            if ((getYCoord() - getR() <= boundaries.y))
+                setYCoord(boundaries.y + getR());
+            else
+                setYCoord(boundaries.y + boundaries.height - getR());
+
             setYVector(-1*getYVector());
         }
 
-        if(getXCoord() - getR() <= boundaries.x || getXCoord() + getR() >= boundaries.x + boundaries.width){
-            if(getYCoord() <= goalBoundaries.y || getYCoord() >= goalBoundaries.y + goalBoundaries.height)
+        if(getXCoord() - getR() <= boundaries.x || getXCoord() + getR() >= boundaries.x + boundaries.width){//left & right walls
+            if(!between(goalBoundaries.y, getYCoord(), goalBoundaries.y+goalBoundaries.height)){
+                if ((getXCoord() - getR() <= boundaries.x))
+                    setXCoord(boundaries.x + getR());
+                else
+                    setXCoord(boundaries.x + boundaries.width - getR());
+
                 setXVector(-1*getXVector());
-            else if((getYCoord() > goalBoundaries.y && getYCoord() - getR() < goalBoundaries.y) || (getYCoord() < goalBoundaries.y + goalBoundaries.height && getYCoord() + getR() > goalBoundaries.y + goalBoundaries.height)){
-                float temp = getXVector();
-                setXVector(getYVector());
-                setYVector(-1*temp);
             }
         }
     }
@@ -93,12 +99,12 @@ public class Ball extends Object {
     }
 
     @Override
-    public void move(Player player1, Player player2, Ball ball, Rectangle boundaries, Rectangle goalBoundaries) {
-        checkCollisions(player1, player2, boundaries, goalBoundaries);
+    public void move(Player enemy, Ball ball, Rectangle boundaries, Rectangle goalBoundaries) {
         setXCoord(getXCoord() + getXVector());
         setYCoord(getYCoord() + getYVector());
         setXVector((float)0.96*getXVector());
         setYVector((float)0.96*getYVector());
+        checkWallHit(boundaries, goalBoundaries);
     }
 
 
