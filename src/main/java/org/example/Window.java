@@ -10,11 +10,11 @@ import static org.example.Main.SCREEN_W;
 
 public class Window {
 
-    private Game game;
+    private final Game game;
     private final JFrame frame = new JFrame();
 
-    public Window(){
-        game = new Game();
+    public Window(int firstMode, int secondMode){
+        game = new Game(firstMode, secondMode);
         frame.add(game);
         frame.setTitle("HaxBall by Kopecki Piotr & Krycki Jakub");
         frame.setSize(SCREEN_W, SCREEN_H);

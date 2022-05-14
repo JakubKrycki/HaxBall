@@ -1,11 +1,13 @@
 package org.example.game.objects.players;
 
+import lombok.Data;
 import org.example.game.objects.ball.Ball;
 
 import java.awt.*;
 
+@Data
 public class Bot extends Player{
-    int mode;
+    private int mode;
     public Bot(float x, float y, char side, Color color, int mode) {
         super(x, y, side, color);
         this.mode = mode;
@@ -57,21 +59,32 @@ public class Bot extends Player{
 
     public void toGoalLine(Ball ball, Player enemy, Rectangle goalBoundaries){
         float xS = (getSide() == 'L')? goalBoundaries.x + getR() : goalBoundaries.x+goalBoundaries.width - getR();
-        float yS = (float)(goalBoundaries.y+0.5*goalBoundaries.height);
-        double dist = distanceFromPoint(xS, yS);
-        float a = (yS - ball.getYCoord())/(xS-ball.getXCoord());
-        float b = yS - a*xS;
-        float tempY = a*getXCoord() + b;
-        if(Math.abs(getYCoord()-tempY) >= 5){
-            if(getYCoord() > tempY)
-                setYVector(-5);
-            else
-                setYVector(5);
-        }else{
-            float yV = yS - getYCoord();
-            setYVector(yV * 5 / (float)dist);
+        float yS = getYFromLine(ball, enemy, xS, goalBoundaries.y + (float)goalBoundaries.height/2) ;
+
+        if(yS <= goalBoundaries.y || yS >= goalBoundaries.y + goalBoundaries.height){
+            yS = (yS <= goalBoundaries.y)? goalBoundaries.y + getR() : goalBoundaries.y + goalBoundaries.height - getR();
         }
-        setXVector(5*getSignOfNumber(xS - getXCoord()));
+        if ((Math.abs(yS - getYCoord()) > 5)) {
+            setYVector(5 * getSignOfNumber(yS - getYCoord()));
+        } else {
+            setYVector(yS - getYCoord());
+        }
+
+        if(Math.abs(getXCoord()-xS) > 5)
+            setXVector(5*getSignOfNumber(xS - getXCoord()));
+        else{
+            setXVector(xS - getXCoord());
+        }
+    }
+
+    public float getYFromLine(Ball ball, Player enemy, float x, float y){//do line from 2 points (ball & enemy) return value of this function for parameter x
+        if (ball.getXCoord() == enemy.getXCoord()){
+            return y;
+        }else{
+            float a = (ball.getYCoord() - enemy.getYCoord())/(ball.getXCoord() - enemy.getXCoord());
+            float b = ball.getYCoord() - a*ball.getXCoord();
+            return a*x+b;
+        }
     }
 
     public void toStrike(Ball ball, Rectangle goalBoundaries) {

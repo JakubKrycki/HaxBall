@@ -1,6 +1,8 @@
 package org.example.game.objects.players;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.example.game.objects.Object;
 import org.example.game.objects.ball.Ball;
 
@@ -10,6 +12,7 @@ import static org.example.Main.SCREEN_H;
 import static org.example.Main.SCREEN_W;
 
 @Data
+@NoArgsConstructor
 public abstract class Player extends Object {
 
     private int points = 0;

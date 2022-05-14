@@ -30,12 +30,18 @@ public class Game extends JPanel implements ActionListener,KeyListener {
     private float time = 0;
     private Image backgroundImage;
 
-    public Game(){
+    public Game(int firstMode, int secondMode){
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         String path = "assets/pitch_resized.png";
         backgroundImage = toolkit.getImage(path);
-        playerBlue = new AlivePlayer((float)SCREEN_W/4 - 210,(float)SCREEN_H/2 - 90, 'L', Color.RED);
-        playerRed = new Bot((float)SCREEN_W - 110,(float)SCREEN_H/2 - 90, 'R', Color.BLUE, 1);
+        if(firstMode == 0)
+            playerBlue = new AlivePlayer((float)SCREEN_W/4 - 210,(float)SCREEN_H/2 - 90, 'L', Color.RED);
+        else
+            playerBlue = new Bot((float)SCREEN_W/4 - 210,(float)SCREEN_H/2 - 90, 'L', Color.RED, firstMode);
+        if(secondMode == 0)
+            playerRed = new AlivePlayer((float)SCREEN_W - 110,(float)SCREEN_H/2 - 90, 'R', Color.BLUE);
+        else
+            playerRed = new Bot((float)SCREEN_W - 110,(float)SCREEN_H/2 - 90, 'R', Color.BLUE, secondMode);
         ball = new Ball((float)SCREEN_W/2 ,(float)SCREEN_H/2 - 90,Color.WHITE);
         boundaries = new Rectangle(78, 54, 1123, 613);
         goalBoundaries = new Rectangle(78, 275, 1123, 170);
@@ -233,17 +239,18 @@ public class Game extends JPanel implements ActionListener,KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
         int button = e.getKeyCode();
+        Player alive = (playerBlue instanceof AlivePlayer)? playerBlue : playerRed;
         if(button == KeyEvent.VK_DOWN){
-            playerBlue.setYVector(0);
+            alive.setYVector(0);
         }
         if(button == KeyEvent.VK_UP){
-            playerBlue.setYVector(0);
+            alive.setYVector(0);
         }
         if(button == KeyEvent.VK_RIGHT){
-            playerBlue.setXVector(0);
+            alive.setXVector(0);
         }
         if(button == KeyEvent.VK_LEFT){
-            playerBlue.setXVector(0);
+            alive.setXVector(0);
         }
     }
 
