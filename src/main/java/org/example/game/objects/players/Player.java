@@ -38,7 +38,7 @@ public abstract class Player extends Object {
     }
 
     public void checkGoalHit(Rectangle goalBoundaries){
-        if(getXCoord() - getR() <= goalBoundaries.x || getXCoord() + getR() >= goalBoundaries.x + goalBoundaries.width) {
+        if(getXCoord() - getR() < goalBoundaries.x || getXCoord() + getR() > goalBoundaries.x + goalBoundaries.width) {
             if (between(getYCoord(), goalBoundaries.y, getYCoord() + getR()))
                 setYCoord(goalBoundaries.y - getR());
             else if (between(getYCoord(), goalBoundaries.y, getYCoord() - getR()))

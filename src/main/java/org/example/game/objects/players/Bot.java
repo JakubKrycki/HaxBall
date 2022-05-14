@@ -35,14 +35,14 @@ public class Bot extends Player{
     }
 
     public void bot3(Ball ball, Player enemy, Rectangle goalBoundaries){//check distance and decide to go to ball or stay near goal line
-        if(distance(ball)>enemy.distance(ball))
+        if(distance(ball) - getR() >enemy.distance(ball))
             toGoalLine(ball, enemy, goalBoundaries);
         else
             toBall(ball);
     }
 
     public void bot4(Ball ball, Player enemy, Rectangle goalBoundaries){
-        if(distance(ball)>enemy.distance(ball))
+        if(distance(ball) - getR() >enemy.distance(ball))
             toGoalLine(ball, enemy, goalBoundaries);
         else if(distance(ball) < ball.getR() + 1.5*getR())
             toStrike(ball, goalBoundaries);

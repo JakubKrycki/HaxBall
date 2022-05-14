@@ -8,7 +8,7 @@ import java.awt.*;
 
 @Data
 public class Ball extends Object {
-    private float speed = (float)Math.sqrt(50);
+    private float speed = (float)Math.sqrt(81);
     public Ball(float x, float y, Color color){
         super(x, y, 0.1f, color);
         this.setR(20);
@@ -106,6 +106,4 @@ public class Ball extends Object {
         setYVector((float)0.96*getYVector());
         checkWallHit(boundaries, goalBoundaries);
     }
-
-
 }
