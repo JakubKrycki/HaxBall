@@ -1,6 +1,9 @@
 package org.example.game;
 
 import lombok.Data;
+import org.example.client.Client;
+import org.example.client.ReadFromServer;
+import org.example.client.WriteToServer;
 import org.example.game.objects.ball.Ball;
 import org.example.game.objects.bonus.Bonus;
 import org.example.game.objects.players.AlivePlayer;
@@ -11,6 +14,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import javax.swing.*;
 
 import static org.example.Main.*;
@@ -21,22 +26,18 @@ public class Game extends JPanel implements ActionListener,KeyListener {
     private Player me;
     private Ball ball;
     private Bonus bonus;
-    private Rectangle goalBoundaries;
-    private Rectangle boundaries;
     private String score = "0 : 0";
-    private Timer timer;
     private final int BOX_WH = 75;
     private String gameFinished = "no";
-    private boolean startNewGame = false;
     private float time = 0;
     private Image backgroundImage;
     private int id;
 
-    public Game(int id){
+    public Game(Client client){
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         String path = "assets/pitch_resized.png";
         backgroundImage = toolkit.getImage(path);
-        this.id = id;
+        this.id = client.getPlayerID();
         if(id == 1){
             me = new AlivePlayer((float)SCREEN_W - 110,(float)SCREEN_H/2 - 90, Color.BLUE);
             enemy = new AlivePlayer((float)SCREEN_W/4 - 210,(float)SCREEN_H/2 - 90, Color.RED);
@@ -47,14 +48,16 @@ public class Game extends JPanel implements ActionListener,KeyListener {
         }
         ball = new Ball((float)SCREEN_W/2 ,(float)SCREEN_H/2 - 90,Color.WHITE);
         bonus = new Bonus(0,0,Color.ORANGE);
-        boundaries = new Rectangle(78, 54, 1123, 613);
-        goalBoundaries = new Rectangle(78, 275, 1123, 170);
         addKeyListener(this);
         setFocusable(true);
         requestFocus();
         setFocusTraversalKeysEnabled(false);
-        timer = new Timer(10, this);
-        timer.start();
+        ReadFromServer rfs = new ReadFromServer(client.getIn(), this);
+        WriteToServer wts = new WriteToServer(client.getOut(), this);
+        Thread threadRFS = new Thread(rfs);
+        Thread threadWTS = new Thread(wts);
+        threadRFS.start();
+        threadWTS.start();
     }
 
     @Override
@@ -103,7 +106,7 @@ public class Game extends JPanel implements ActionListener,KeyListener {
         r = (int)(getBall().getR());
         g.fillOval(x-r,y-r,r*2,r*2);
 
-        if(getBonus().canBeDrawn(getTime(),getMe(),getEnemy())){
+        if(getBonus().getXCoord() != 0){
             g.setColor(getBonus().getColor());
             x = (int)(getBonus().getXCoord());
             y = (int)(getBonus().getYCoord());
@@ -148,141 +151,6 @@ public class Game extends JPanel implements ActionListener,KeyListener {
         g.drawString(temp,SCREEN_W/2 - stringWidth/2,SCREEN_H/2 - stringWidth/2);
     }
 
-    public void newRound(){
-        if(id == 1){
-            enemy.setYCoord((float)SCREEN_H/2 - 90);
-            enemy.setXCoord((float)SCREEN_W/4 - 210);
-            me.setYCoord((float)SCREEN_H/2 - 90);
-            me.setXCoord((float)SCREEN_W - 110);
-        }
-        else{
-            me.setYCoord((float)SCREEN_H/2 - 90);
-            me.setXCoord((float)SCREEN_W/4 - 210);
-            enemy.setYCoord((float)SCREEN_H/2 - 90);
-            enemy.setXCoord((float)SCREEN_W - 110);
-        }
-        enemy.setXVector(0);
-        enemy.setYVector(0);
-        me.setXVector(0);
-        me.setYVector(0);
-        me.setSpeed(me.getStartingSpeed());
-        enemy.setSpeed(enemy.getStartingSpeed());
-        ball = new Ball((float)SCREEN_W/2 ,(float)SCREEN_H/2 - 90,Color.WHITE);
-        bonus = new Bonus(0,0,Color.ORANGE);
-    }
-    public void newGame(){
-        if(id == 1){
-            me = new AlivePlayer((float)SCREEN_W - 110,(float)SCREEN_H/2 - 90, Color.BLUE);
-            enemy = new AlivePlayer((float)SCREEN_W/4 - 210,(float)SCREEN_H/2 - 90, Color.RED);
-        }
-        else{
-            me = new AlivePlayer((float)SCREEN_W/4 - 210,(float)SCREEN_H/2 - 90, Color.RED);
-            enemy = new AlivePlayer((float)SCREEN_W - 110,(float)SCREEN_H/2 - 90, Color.BLUE);
-        }
-        enemy.setXVector(0);
-        enemy.setYVector(0);
-        me.setXVector(0);
-        me.setYVector(0);
-        ball = new Ball((float)SCREEN_W/2 ,(float)SCREEN_H/2 - 90,Color.WHITE);
-        bonus = new Bonus(0,0,Color.ORANGE);
-        boundaries = new Rectangle(78, 54, 1123, 613);
-        goalBoundaries = new Rectangle(78, 275, 1123, 170);
-        timer.restart();
-        score = "0 : 0";
-        gameFinished = "no";
-        startNewGame = false;
-        time = 0;
-    }
-
-    public boolean checkIfGameIsOver(){
-        if(me.getPoints() >= 3){
-            if(id == 1){
-                gameFinished = "Blue wins";
-            }
-            else{
-                gameFinished = "Red wins";
-            }
-            return true;
-        }
-        else if(enemy.getPoints() >= 3){
-            if(id == 1){
-                gameFinished = "Red wins";
-            }
-            else{
-                gameFinished = "Blue wins";
-            }
-            return true;
-        }
-        else if(time >= 1000*60*3){
-            if(me.getPoints() > enemy.getPoints()){
-                if(id == 1){
-                    gameFinished = "Blue wins";
-                }
-                else{
-                    gameFinished = "Red wins";
-                }
-            }
-            else if(enemy.getPoints() > me.getPoints()){
-                if(id == 1){
-                    gameFinished = "Red wins";
-                }
-                else{
-                    gameFinished = "Blue wins";
-                }
-            }
-            else{
-                gameFinished = "Its a draw";
-            }
-            return true;
-        }
-        else{
-            gameFinished = "no";
-            return false;
-        }
-    }
-
-    public void addGoal(String whichPlayer){
-        if(whichPlayer == null){
-            return;
-        }
-        if(whichPlayer.equals("blue")){
-            if(id == 1){
-                me.setPoints(me.getPoints()+1);
-            }
-            else{
-                enemy.setPoints(enemy.getPoints()+1);
-            }
-        }
-        else if(whichPlayer.equals("red")){
-            if(id == 2){
-                me.setPoints(me.getPoints()+1);
-            }
-            else{
-                enemy.setPoints(enemy.getPoints()+1);
-            }
-        }
-        newRound();
-    }
-
-    public void changeScore(){
-        String s;
-        if(id == 1){
-            s = Integer.toString(enemy.getPoints());
-        }
-        else{
-            s = Integer.toString(me.getPoints());
-        }
-        score = s;
-        score += " : ";
-        if(id == 1){
-            s = Integer.toString(me.getPoints());
-        }
-        else{
-            s = Integer.toString(enemy.getPoints());
-        }
-        score += s;
-    }
-
     @Override
     public void keyTyped(KeyEvent e) {}
 
@@ -300,9 +168,6 @@ public class Game extends JPanel implements ActionListener,KeyListener {
         }
         if(button == KeyEvent.VK_LEFT){
             me.setXVector(-me.getSpeed());
-        }
-        if(button == KeyEvent.VK_N && !(gameFinished.equals("no"))){
-            startNewGame = true;
         }
     }
 
@@ -323,21 +188,11 @@ public class Game extends JPanel implements ActionListener,KeyListener {
         }
     }
 
+
+
+
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(checkIfGameIsOver() && !(gameFinished.equals("no"))){
-            repaint();
-            if(startNewGame){
-                newGame();
-            }
-        }
-        else{
-            me.move(me, enemy, boundaries, goalBoundaries, bonus);
-            ball.move(me, enemy, boundaries, goalBoundaries, bonus);
-            addGoal(ball.checkIfGoal());
-            changeScore();
-            time += timer.getDelay();
-            repaint();
-        }
     }
 }

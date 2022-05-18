@@ -71,7 +71,6 @@ public class Ball extends Object {
     @Override
     public void move(Player player1, Player player2, Rectangle boundaries, Rectangle goalBoundaries, Bonus bonus) {
         checkCollisions(player1, player2, boundaries, goalBoundaries);
-
         setXCoord(getXCoord() + getXVector());
         setYCoord(getYCoord() + getYVector());
         setXVector((float)0.95*getXVector());

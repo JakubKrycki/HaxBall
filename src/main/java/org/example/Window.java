@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.client.Client;
 import org.example.game.Game;
 
 import javax.swing.*;
@@ -13,8 +14,8 @@ public class Window {
     private final Game game;
     private final JFrame frame = new JFrame();
 
-    public Window(int id){
-        game = new Game(id);
+    public Window(Client client){
+        game = new Game(client);
         frame.add(game);
         frame.setTitle("HaxBall by Kopecki Piotr & Krycki Jakub");
         frame.setSize(SCREEN_W, SCREEN_H);

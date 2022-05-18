@@ -1,4 +1,4 @@
-package org.example;
+package org.example.client;
 import lombok.Data;
 
 import java.io.DataInputStream;
@@ -12,6 +12,8 @@ public class Client {
     private int playerID;
     private DataInputStream in;
     private DataOutputStream out;
+    // private ReadFromServer rfs;
+    //private WriteToServer wts;
 
     public Client(){
         try{
