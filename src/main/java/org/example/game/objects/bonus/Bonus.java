@@ -25,7 +25,7 @@ public class Bonus extends Object {
     public void findNewPosition(){
         Random number = new Random();
         float x = number.nextFloat(900 - this.getR()) + 234;
-        float y = number.nextFloat(600 - this.getR()) + 51;
+        float y = number.nextFloat(550 - this.getR()) + 100;
         this.setXCoord(x);
         this.setYCoord(y);
     }
