@@ -12,12 +12,10 @@ public class Client {
     private int playerID;
     private DataInputStream in;
     private DataOutputStream out;
-    // private ReadFromServer rfs;
-    //private WriteToServer wts;
 
     public Client(){
         try{
-            socket = new Socket("localhost", 45371);
+            socket = new Socket("25.65.147.9", 45371);
             in  = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
             playerID = in.readInt();

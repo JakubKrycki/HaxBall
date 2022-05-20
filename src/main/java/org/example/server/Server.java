@@ -120,7 +120,7 @@ public class Server implements ActionListener {
             p1.setPoints(p1.getPoints() + 1);
         }
         else if(whichPlayer.equals("red")){
-            p2.setPoints(p1.getPoints() + 1);
+            p2.setPoints(p2.getPoints() + 1);
         }
         if(checkIfGameIsOver()){
             newGame();
