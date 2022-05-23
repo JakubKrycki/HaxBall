@@ -36,6 +36,14 @@ public abstract class Object {
         return Math.sqrt(Math.pow(xCoord- object.xCoord, 2)+Math.pow(yCoord- object.yCoord, 2));
     }
 
+    public double distanceFromPoint(float x, float y){
+        return Math.sqrt(Math.pow(xCoord-x, 2)+Math.pow(yCoord-y, 2));
+    }
+
+    public boolean between(float left, float middle, float right){
+        return ((left < middle && middle < right) || (left > middle && middle > right));
+    }
+
     public float getSignOfNumber(float number){
         return (number != 0)? number/Math.abs(number) : 0;
     }

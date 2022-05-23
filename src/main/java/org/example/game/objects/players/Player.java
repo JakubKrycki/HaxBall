@@ -43,4 +43,26 @@ public abstract class Player extends Object {
         }
     }
 
+    public void checkWallHit(Rectangle boundaries, Rectangle goalBoundaries){
+        if(getYCoord() - getR() < boundaries.y || getYCoord() + getR() > boundaries.y + boundaries.height){//up & down walls
+            if ((getYCoord() - getR() < boundaries.y))
+                setYCoord(boundaries.y + getR());
+            else
+                setYCoord(boundaries.y + boundaries.height - getR());
+
+            setYVector(-1*getYVector());
+        }
+
+        if(getXCoord() - getR() < boundaries.x || getXCoord() + getR() > boundaries.x + boundaries.width){//left & right walls
+            if(!between(goalBoundaries.y, getYCoord(), goalBoundaries.y+goalBoundaries.height)){
+                if ((getXCoord() - getR() < boundaries.x))
+                    setXCoord(boundaries.x + getR());
+                else
+                    setXCoord(boundaries.x + boundaries.width - getR());
+
+                setXVector(-1*getXVector());
+            }
+        }
+    }
+
 }
