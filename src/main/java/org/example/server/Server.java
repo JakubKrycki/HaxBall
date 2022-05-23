@@ -192,9 +192,7 @@ public class Server implements ActionListener {
         goalBoundaries = new Rectangle(78, 275, 1123, 170);
         timer.restart();
         score = "0 : 0";
-       // time = 0;
         timeWhenGoalScored = 0;
-       // gameFinished = "no";
     }
 
     @Override
