@@ -38,6 +38,7 @@ public class Server implements ActionListener {
     private float time = 0;
     private Timer timer;
     private float timeWhenGoalScored = 0;
+    private float timeWhenGameEnded = 0;
 
     public Server(){
         numberOfPlayers = 0;
@@ -134,10 +135,12 @@ public class Server implements ActionListener {
     public boolean checkIfGameIsOver(){
         if(p1.getPoints() >= 3){
             gameFinished = "Blue wins";
+            timeWhenGameEnded = time;
             return true;
         }
         else if(p2.getPoints() >= 3){
             gameFinished = "Red wins";
+            timeWhenGameEnded = time;
             return true;
         }
         else if(time >= 1000*60*3){
@@ -150,12 +153,14 @@ public class Server implements ActionListener {
             else{
                 gameFinished = "Its a draw";
             }
+            timeWhenGameEnded = time;
             return true;
         }
-        else{
+        if(time - timeWhenGameEnded >= 1000 && timeWhenGameEnded != 0){
             gameFinished = "no";
-            return false;
+            time = 0;
         }
+        return false;
     }
 
     public void newRound(){
@@ -187,9 +192,9 @@ public class Server implements ActionListener {
         goalBoundaries = new Rectangle(78, 275, 1123, 170);
         timer.restart();
         score = "0 : 0";
-        gameFinished = "no";
-        time = 0;
+       // time = 0;
         timeWhenGoalScored = 0;
+       // gameFinished = "no";
     }
 
     @Override

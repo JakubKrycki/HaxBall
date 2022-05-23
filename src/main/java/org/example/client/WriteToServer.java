@@ -18,8 +18,14 @@ public class WriteToServer implements Runnable{
     public void run() {
         try{
             while(true){
-                dataOutputStream.writeFloat(game.getMe().getXVector());
-                dataOutputStream.writeFloat(game.getMe().getYVector());
+                if(game.getGameFinished().equals("no")){
+                    dataOutputStream.writeFloat(game.getMe().getXVector());
+                    dataOutputStream.writeFloat(game.getMe().getYVector());
+                }
+                else{
+                    dataOutputStream.writeFloat(0);
+                    dataOutputStream.writeFloat(0);
+                }
                 dataOutputStream.flush();
                 try{
                     Thread.sleep(10);

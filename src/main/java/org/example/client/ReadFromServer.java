@@ -27,7 +27,10 @@ public class ReadFromServer implements Runnable{
                 game.getBall().setYCoord(dataInputStream.readFloat());
                 game.setScore(dataInputStream.readUTF());
                 game.setGameFinished(dataInputStream.readUTF());
-                game.setTime(dataInputStream.readFloat());
+                float t = dataInputStream.readFloat();
+                if(game.getGameFinished().equals("no")){
+                    game.setTime(t);
+                }
                 game.getBonus().setXCoord(dataInputStream.readFloat());
                 game.getBonus().setYCoord(dataInputStream.readFloat());
                 game.repaint();
