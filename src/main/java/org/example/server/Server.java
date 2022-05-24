@@ -159,6 +159,7 @@ public class Server implements ActionListener {
         if(time - timeWhenGameEnded >= 1000 && timeWhenGameEnded != 0){
             gameFinished = "no";
             time = 0;
+            timeWhenGameEnded = 0;
         }
         return false;
     }
