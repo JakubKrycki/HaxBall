@@ -32,7 +32,7 @@ public abstract class Object {
     }
 
     public boolean checkHit(Object object){
-        return distance(object) <= r+object.getR();
+        return distance(object) < r+object.getR();
     }
 
     public double distance(Object object){

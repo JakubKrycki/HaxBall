@@ -102,7 +102,7 @@ public class Simulation {
         int draws = numberOfMatches - firstPlayerWins - secondPlayerWins;
         System.out.println("Results (" + numberOfMatches + "games):");
         System.out.println("First bot (mode " + playerOne.getMode() + ") wins " + firstPlayerWins + " times");
-        System.out.println("First bot (mode " + playerTwo.getMode() + ") wins " + secondPlayerWins + " times");
+        System.out.println("Second bot (mode " + playerTwo.getMode() + ") wins " + secondPlayerWins + " times");
         System.out.println("Draws " + draws + " times");
     }
 }
